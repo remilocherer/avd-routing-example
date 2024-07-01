@@ -1,0 +1,37 @@
+---
+all:
+  children:
+    CVP:
+      hosts:
+        cvp:
+    FABRIC:
+      children:
+        WAN1:
+          children:
+            WAN1_P_ROUTERS:
+              hosts:
+
+            WAN1_PE_ROUTERS:
+              hosts:
+                eos1:
+                  ansible_host: 192.168.0.10
+                eos3:
+                  ansible_host: 192.168.0.12
+                eos4:
+                  ansible_host: 192.168.0.13
+                eos6:
+                  ansible_host: 192.168.0.15
+                eos7:
+                  ansible_host: 192.168.0.16
+                eos8:
+                  ansible_host: 192.168.0.17
+            WAN1_RR_ROUTERS:
+              hosts:
+                eos2:
+                  ansible_host: 192.168.0.11
+                eos5:
+                  ansible_host: 192.168.0.14
+
+        NETWORK_SERVICES:
+          children:
+            WAN1_PE_ROUTERS:

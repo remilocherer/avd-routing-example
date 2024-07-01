@@ -1,0 +1,162 @@
+hostname: eos8
+is_deployed: true
+router_bgp:
+  as: '65001'
+  router_id: 10.255.1.8
+  distance:
+    external_routes: 20
+    internal_routes: 200
+    local_routes: 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  peer_groups:
+  - name: MPLS-OVERLAY-PEERS
+    type: mpls
+    update_source: Loopback0
+    bfd: true
+    password: $1c$G8BQN0ezkiJOX2cuAYpsEA==
+    send_community: all
+    maximum_routes: 0
+    remote_as: '65001'
+  address_family_evpn:
+    peer_groups: []
+  address_family_ipv4:
+    peer_groups:
+    - name: MPLS-OVERLAY-PEERS
+      activate: false
+  address_family_vpn_ipv4:
+    neighbor_default_encapsulation_mpls_next_hop_self:
+      source_interface: Loopback0
+    peer_groups:
+    - name: MPLS-OVERLAY-PEERS
+      activate: true
+  neighbors:
+  - ip_address: 10.255.2.2
+    peer_group: MPLS-OVERLAY-PEERS
+    peer: eos2
+    description: eos2
+  - ip_address: 10.255.2.5
+    peer_group: MPLS-OVERLAY-PEERS
+    peer: eos5
+    description: eos5
+static_routes:
+- vrf: default
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+spanning_tree:
+  mode: none
+local_users:
+- name: admin
+  privilege: 15
+  role: network-admin
+  no_password: true
+- name: ansible
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$QJUtFkyu9yoecsq.$ysGzlb2YXaIMvezqGEna7RE8CMALJHnv7Q1i.27VygyKUtSeX.n2xRTyOtCR8eOAl.4imBLyhXFc4o97P5n071
+- name: arista
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$d7I4QE8Z7GmDEzK2$71qMUkPe3pWlpNTeK6nVB9ZvGoPfsqkHq8qU6euL12IzFmxqjLaHgi/gDFSe4TsCQV5FQQfmCTluQV0ka4Eow/
+  ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6y35ykWqZmfVoVVrG7fZGK1E871EKoatGcJ4UH7+2adcHnpkjT+aZ5uenNW1C3KSLuzlF0xTs4ZPgd4MM7ltn9DoHXBN83T1z+GQLX1OrMQjY++OPUJKzA7q5L07K/Of07VJr1AFnAOqZXGY4l41Vqime7FFlVSv8ejZ7NrlOJ5ekt+dkx5JhIz8P+ggBaugDsWjKINbhw00HhOVNk+xzPSsr5NiNDS7hBbkoxjtkReGzo/RyBDXfDdA6C1x3DSjuxbIQwbEypXwbH9Y2Mzbw70RJ3fnP1ift5lJpT3MTccFnVur5ZFru3qfprM8L+mIxXJFLZWSabSe8EWtltYsB
+    arista@remi-avd
+vrfs:
+- name: default
+  ip_routing: false
+management_interfaces:
+- name: Management0
+  description: oob_management
+  shutdown: false
+  vrf: default
+  ip_address: 192.168.0.17/24
+  gateway: 192.168.0.1
+  type: oob
+management_api_http:
+  enable_vrfs:
+  - name: default
+  enable_https: true
+loopback_interfaces:
+- name: Loopback0
+  description: MPLS_Overlay_peering
+  shutdown: false
+  ip_address: 10.255.1.8/32
+  isis_enable: CORE
+  isis_passive: true
+  node_segment:
+    ipv4_index: 8
+router_isis:
+  instance: CORE
+  log_adjacency_changes: true
+  net: 49.0001.0000.0001.0008.00
+  router_id: 10.255.1.8
+  is_type: level-2
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+  advertise:
+    passive_only: false
+  segment_routing_mpls:
+    router_id: 10.255.1.8
+    enabled: true
+mpls:
+  ip: true
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+ethernet_interfaces:
+- name: Ethernet1
+  peer: eos4
+  peer_interface: Ethernet2
+  peer_type: pe
+  description: P2P_LINK_TO_eos4_Ethernet2
+  type: routed
+  shutdown: false
+  mtu: 1500
+  ip_address: 10.255.3.25/31
+  isis_enable: CORE
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_hello_padding: true
+  isis_circuit_type: level-2
+  isis_authentication_mode: md5
+  isis_authentication_key: $1c$sTNAlR6rKSw=
+  mpls:
+    ip: true
+- name: Ethernet3
+  peer: eos6
+  peer_interface: Ethernet2
+  peer_type: pe
+  description: P2P_LINK_TO_eos6_Ethernet2
+  type: routed
+  shutdown: false
+  mtu: 1500
+  ip_address: 10.255.3.29/31
+  isis_enable: CORE
+  isis_metric: 50
+  isis_network_point_to_point: true
+  isis_hello_padding: true
+  isis_circuit_type: level-2
+  isis_authentication_mode: md5
+  isis_authentication_key: $1c$sTNAlR6rKSw=
+  mpls:
+    ip: true
+ip_igmp_snooping:
+  globally_enabled: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:00
+metadata:
+  platform: cEOS-lab

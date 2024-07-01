@@ -1,0 +1,192 @@
+---
+# Default gateway used for the management interface
+mgmt_gateway: 192.168.0.1
+mgmt_interface: Management0
+mgmt_interface_vrf: default
+
+# iBGP ASN for the fabric
+bgp_as: 65001
+
+# BGP distance for specific route types
+bgp_distance:
+  external_routes: 20
+  internal_routes: 200
+  local_routes: 200
+
+# P router group
+# p:
+#   # Definition of default values that will be configured to all nodes defined in this group
+#   defaults:
+#     # Set the relevant platform as each platform has different default values in Ansible AVD
+#     platform: cEOS-lab
+#     # Pool of IPv4 addresses to configure interface Loopback0 used for Router ID
+#     loopback_ipv4_pool: 10.255.0.0/27
+#     # ISIS NET system id prefix
+#     isis_system_id_prefix: '0000.0000'
+#   # Definition of nodes contained in this group.
+#   # Specific configuration of device must take place under the node definition. Each node inherites all values defined under 'defaults'
+#   nodes:
+#     # Name of the node to be defined (must be consistent with definition in inventory)
+#     - name: p1
+#       # Device ID definition. An integer number used for internal calculations (ie. IPv4 address of the loopback_ipv4_pool among others)
+#       id: 1
+#       # Management IP to be assigned to the management interface
+#       mgmt_ip: 172.16.1.11/24
+#     - name: p2
+#       id: 2
+#       mgmt_ip: 172.16.1.12/24
+
+
+# PE router group
+pe:
+  defaults:
+    # Set the relevant platform as each platform has different default values in Ansible AVD
+    platform: cEOS-lab
+    # Pool of IPv4 addresses to configure interface Loopback0 used for BGP EVPN sessions
+    loopback_ipv4_pool: 10.255.1.0/27
+    virtual_router_mac_address: 00:1c:73:00:dc:00
+    mpls_route_reflectors: [ eos2, eos5 ]
+    # ISIS NET system id prefix
+    isis_system_id_prefix: '0000.0001'
+    spanning_tree_mode: none
+
+  # If two nodes (and only two) are in the same node_group, they will automatically form an MLAG pair
+  node_groups:
+    # Definition of a node group that will include two devices in MLAG.
+    # Definitions under the group will be inherited by both nodes in the group
+    - group: WAN1-EOS1
+      nodes:
+        # Definition of hostnames under the node_group
+        - name: eos1
+          id: 1
+          mgmt_ip: 192.168.0.10/24
+
+    - group: WAN1-EOS3-4
+      nodes:
+        - name: eos3
+          id: 3
+          mgmt_ip: 192.168.0.12/24
+        - name: eos4
+          id: 4
+          mgmt_ip: 192.168.0.13/24
+
+    - group: WAN1-EOS6
+      nodes:
+        - name: eos6
+          id: 6
+          mgmt_ip: 192.168.0.15/24
+          
+    - group: WAN1-EOS7
+      nodes:
+        - name: eos7
+          id: 7
+          mgmt_ip: 192.168.0.16/24
+
+    - group: WAN1-EOS8
+      nodes:
+        - name: eos8
+          id: 8
+          mgmt_ip: 192.168.0.17/24
+          
+# RR router group
+rr:
+  defaults:
+    platform: cEOS-lab
+    spanning_tree_mode: none
+    loopback_ipv4_pool: 10.255.2.0/27
+    mpls_route_reflectors: [ eos2, eos5 ]
+    # ISIS NET system id prefix
+    isis_system_id_prefix: '0000.0002'
+
+  node_groups:
+    - group: WAN1_EOS2
+      nodes:
+        - name: eos2
+          id: 2
+          mgmt_ip: 192.168.0.11/24
+    - group: WAN1_EOS5
+      nodes:
+        - name: eos5
+          id: 5
+          mgmt_ip: 192.168.0.14/24
+
+# As MPLS-VPN WAN networks are often not pure l3ls-topologies, but arbitrary mesh topologies/hub-and-spoke, etc, the l3ls-evpn method
+# of defining underlay topology on the nodes/node-defaults with uplink_switches, uplink_interfaces and uplink_switch_interfaces is
+# substituted for this free-standing data model of core_interfaces, where all p2p underlay links in the topology are defined.
+
+core_interfaces:
+  # First, an IP-pool for the underlay p2p links is defined
+  p2p_links_ip_pools:
+    - name: core_pool
+      ipv4_pool: 10.255.3.0/24
+  p2p_links_profiles:
+    - name: core_profile
+      # speed: 100gfull
+      # On vEOS-lab, MTU values larger than 1500 can cause issues, in an actual production network this is normally a larger value
+      mtu: 1500
+      isis_metric: 50
+      ip_pool: core_pool
+      isis_circuit_type: level-2
+      isis_authentication_mode: md5
+      isis_authentication_key: $1c$sTNAlR6rKSw=
+  p2p_links:
+    - nodes: [ eos1, eos2 ]
+      id: 1
+      interfaces: [ Ethernet1, Ethernet5 ]
+      profile: core_profile
+    - nodes: [ eos1, eos7 ]
+      id: 2
+      interfaces: [ Ethernet2, Ethernet3 ]
+      profile: core_profile
+    - nodes: [ eos1, eos6 ]
+      id: 3
+      interfaces: [ Ethernet4, Ethernet4 ]
+      profile: core_profile
+    - nodes: [ eos1, eos5 ]
+      id: 4
+      interfaces: [ Ethernet5, Ethernet4 ]
+      profile: core_profile
+    - nodes: [ eos2, eos3 ]
+      id: 5
+      interfaces: [ Ethernet1, Ethernet3 ]
+      profile: core_profile
+    - nodes: [ eos2, eos4 ]
+      id: 6
+      interfaces: [ Ethernet2, Ethernet4 ]
+      profile: core_profile
+    - nodes: [ eos2, eos5 ]
+      id: 7
+      interfaces: [ Ethernet3, Ethernet3 ]
+      profile: core_profile
+    - nodes: [ eos2, eos6 ]
+      id: 8
+      interfaces: [ Ethernet4, Ethernet5 ]
+      profile: core_profile
+    - nodes: [ eos3, eos5 ]
+      id: 9
+      interfaces: [ Ethernet4, Ethernet2 ]
+      profile: core_profile
+    - nodes: [ eos3, eos4 ]
+      id: 10
+      interfaces: [ Ethernet5, Ethernet5 ]
+      profile: core_profile
+    - nodes: [ eos3, eos7 ]
+      id: 11
+      interfaces: [ Ethernet2, Ethernet1 ]
+      profile: core_profile
+    - nodes: [ eos4, eos5 ]
+      id: 12
+      interfaces: [ Ethernet3, Ethernet1 ]
+      profile: core_profile
+    - nodes: [ eos4, eos8 ]
+      id: 13
+      interfaces: [ Ethernet2, Ethernet1 ]
+      profile: core_profile
+    - nodes: [ eos5, eos6 ]
+      id: 14
+      interfaces: [ Ethernet5, Ethernet1 ]
+      profile: core_profile
+    - nodes: [ eos6, eos8 ]
+      id: 15
+      interfaces: [ Ethernet2, Ethernet3 ]
+      profile: core_profile

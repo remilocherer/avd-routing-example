@@ -1,0 +1,25 @@
+---
+- name: Deploy Configs to CVP
+  hosts: CVP
+  gather_facts: false
+  tasks:
+    - name: Run CVP provisioning
+      ansible.builtin.import_role:
+          name: arista.avd.eos_config_deploy_cvp
+      vars:
+        container_root: WAN1
+        fabric_name: WAN1
+        execute_tasks: false
+
+# - name: Deploy Configs to CVP
+#   hosts: FABRIC 
+#   connection: local
+#   gather_facts: false
+#   tasks:
+#     - name: Deploy configurations and tags to CloudVision
+#       ansible.builtin.import_role:
+#         name: arista.avd.cv_deploy
+#       vars:
+#         cv_server: cvp
+#         cv_token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkaWQiOjczNjEwNTM4OTM1MjM5MzEzNDYsImRzbiI6IkFWRCIsImRzdCI6ImFjY291bnQiLCJleHAiOjE5MjQ5NDQxOTEsImlhdCI6MTcxOTY1NDIwOCwib2dpIjozLCJvZ24iOiJEZWZhdWx0Iiwic2lkIjoiNDFlOTM5OTIxYTdlMGI2N2Y2ZWM0OGVjYWM4NmE2NTBlOWMxZDA1ODg0NzJkYTUyYzQwYmM0NjQwZmEyYjQ4MS0yZ3RBeW85VUdWU0NBSHktMkRtdU80dTZJQzZFeHJRd3dHNkVVblY2In0.xySoMmw8nNqchtT_iRKpxq77imUKktoqNi5pwciQjoWPNM5MVR5AELvArI0g2vVs_ZTWOYqBddqP-pYihdZitMPozJx2Otq2hhVsqp69W-ONUlND06v49PBdIsUTH2pFt6NKbOV11wqceAUayLwyRZ_iMUF_GhwrhFpN0ROuRfrh-oddgH3uEQwuUPWUwknOT5QzBhTUx_hkNYUWazB-SE1decDNBsypOgW_uPIfnLpMnn0DMjQAw9i8XnoOLUc4SQpHEv_eA51r7Hhanl9J99tqr5utIE49bcqvE7SLYCM0p_KPTGT9cUKbWKH9cBQIU2ui_fnED8hKYtV19KEwxHkXwuV-OnCDD_07ifkIKtehn59Mf0RO9iZJo1odznLSLKzoY_R2fyQnsCgMj7pAtMav7IOr0ipEZieXLlsMD6efGbDSLPKHNFlU2D6LxlpXaTcUpfpP9hL8H4RbUjp6w3TNZmh7qaPj5jEBIjXX-nItEeW4pHpagM4VPdKMf5rpDibGKZAbyQWQj9ZPtsTF5to3EjYQR59B30ryNbEhB0lLxj4wNYi3Mwh2bB6UDzoTADgosHSAQnu1YkjcgGL1Nl1O0JS9BY4mz-HFRBRJwh7h2IE2mVIryyCHeCaf1jxzulcPT9227Npve9IXC-7YS6_5V2QuBIPxX2tvwJkHf8Y
+#         cv_verify_certs: false

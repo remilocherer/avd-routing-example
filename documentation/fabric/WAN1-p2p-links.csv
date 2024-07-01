@@ -1,0 +1,16 @@
+Type,Node,Node Interface,Leaf IP Address,Peer Type,Peer Node,Peer Interface,Peer IP Address
+pe,eos1,Ethernet1,10.255.3.0/31,rr,eos2,Ethernet5,10.255.3.1/31
+pe,eos1,Ethernet2,10.255.3.2/31,pe,eos7,Ethernet3,10.255.3.3/31
+pe,eos1,Ethernet4,10.255.3.4/31,pe,eos6,Ethernet4,10.255.3.5/31
+pe,eos1,Ethernet5,10.255.3.6/31,rr,eos5,Ethernet4,10.255.3.7/31
+rr,eos2,Ethernet1,10.255.3.8/31,pe,eos3,Ethernet3,10.255.3.9/31
+rr,eos2,Ethernet2,10.255.3.10/31,pe,eos4,Ethernet4,10.255.3.11/31
+rr,eos2,Ethernet3,10.255.3.12/31,rr,eos5,Ethernet3,10.255.3.13/31
+rr,eos2,Ethernet4,10.255.3.14/31,pe,eos6,Ethernet5,10.255.3.15/31
+pe,eos3,Ethernet2,10.255.3.20/31,pe,eos7,Ethernet1,10.255.3.21/31
+pe,eos3,Ethernet4,10.255.3.16/31,rr,eos5,Ethernet2,10.255.3.17/31
+pe,eos3,Ethernet5,10.255.3.18/31,pe,eos4,Ethernet5,10.255.3.19/31
+pe,eos4,Ethernet2,10.255.3.24/31,pe,eos8,Ethernet1,10.255.3.25/31
+pe,eos4,Ethernet3,10.255.3.22/31,rr,eos5,Ethernet1,10.255.3.23/31
+rr,eos5,Ethernet5,10.255.3.26/31,pe,eos6,Ethernet1,10.255.3.27/31
+pe,eos6,Ethernet2,10.255.3.28/31,pe,eos8,Ethernet3,10.255.3.29/31

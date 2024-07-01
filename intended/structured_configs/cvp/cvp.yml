@@ -1,0 +1,43 @@
+---
+cvp_devices:
+  - fqdn: eos1
+    parentContainerName: WAN1_PE_ROUTERS
+    configlets:
+      - AVD-WAN1-_eos1
+  - fqdn: eos2
+    parentContainerName: WAN1_RR_ROUTERS
+    configlets:
+      - AVD-WAN1-_eos2
+  - fqdn: eos3
+    parentContainerName: WAN1_PE_ROUTERS
+    configlets:
+      - AVD-WAN1-_eos3
+  - fqdn: eos4
+    parentContainerName: WAN1_PE_ROUTERS
+    configlets:
+      - AVD-WAN1-_eos4
+  - fqdn: eos5
+    parentContainerName: WAN1_RR_ROUTERS
+    configlets:
+      - AVD-WAN1-_eos5
+  - fqdn: eos6
+    parentContainerName: WAN1_PE_ROUTERS
+    configlets:
+      - AVD-WAN1-_eos6
+  - fqdn: eos7
+    parentContainerName: WAN1_PE_ROUTERS
+    configlets:
+      - AVD-WAN1-_eos7
+  - fqdn: eos8
+    parentContainerName: WAN1_PE_ROUTERS
+    configlets:
+      - AVD-WAN1-_eos8
+cvp_containers:
+  WAN1:
+    parentContainerName: Tenant
+  WAN1_P_ROUTERS:
+    parentContainerName: WAN1
+  WAN1_PE_ROUTERS:
+    parentContainerName: WAN1
+  WAN1_RR_ROUTERS:
+    parentContainerName: WAN1

@@ -1,0 +1,56 @@
+---
+
+design:
+  type: mpls
+
+# Common AVD group variables
+fabric_name: WAN1
+
+dns_domain: atd.lab
+
+# Define underlay and overlay routing protocol to be used
+underlay_routing_protocol: isis-sr
+overlay_routing_protocol: ibgp
+
+# Local users
+local_users:
+  # Define a new user, which is called "ansible"
+  - name: ansible
+    privilege: 15
+    role: network-admin
+    # Password set to "ansible". Same string as the device generates when configuring a username.
+    sha512_password: $6$QJUtFkyu9yoecsq.$ysGzlb2YXaIMvezqGEna7RE8CMALJHnv7Q1i.27VygyKUtSeX.n2xRTyOtCR8eOAl.4imBLyhXFc4o97P5n071
+  - name: admin
+    privilege: 15
+    role: network-admin
+    no_password: true
+  - name: arista
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$d7I4QE8Z7GmDEzK2$71qMUkPe3pWlpNTeK6nVB9ZvGoPfsqkHq8qU6euL12IzFmxqjLaHgi/gDFSe4TsCQV5FQQfmCTluQV0ka4Eow/
+    ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6y35ykWqZmfVoVVrG7fZGK1E871EKoatGcJ4UH7+2adcHnpkjT+aZ5uenNW1C3KSLuzlF0xTs4ZPgd4MM7ltn9DoHXBN83T1z+GQLX1OrMQjY++OPUJKzA7q5L07K/Of07VJr1AFnAOqZXGY4l41Vqime7FFlVSv8ejZ7NrlOJ5ekt+dkx5JhIz8P+ggBaugDsWjKINbhw00HhOVNk+xzPSsr5NiNDS7hBbkoxjtkReGzo/RyBDXfDdA6C1x3DSjuxbIQwbEypXwbH9Y2Mzbw70RJ3fnP1ift5lJpT3MTccFnVur5ZFru3qfprM8L+mIxXJFLZWSabSe8EWtltYsB arista@remi-avd
+
+
+# BGP peer groups passwords
+bgp_peer_groups:
+  # all passwords set to "arista"
+  mpls_overlay_peers:
+    password: $1c$G8BQN0ezkiJOX2cuAYpsEA==
+  rr_overlay_peers:
+    password: $1c$G8BQN0ezkiJOX2cuAYpsEA==
+
+management_security:
+  password:
+    encryption_key_common: true
+
+# daemon_terminattr:
+#   cvaddrs: 
+#     - 192.168.0.5:9910
+#   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+#   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+#   cvauth:
+#     method: token
+#     token_file: /tmp/token 
+#   cvvrf: default 
+#   taillogs:
+#   disable_aaa: true
